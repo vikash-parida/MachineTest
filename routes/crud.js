@@ -3,6 +3,7 @@ const router = express.Router();
 
 //            category-master
 const Category = require('../model/categoryschema');
+// create a new category
 router.post('/cartegory', async  (req,res)=>{  
     try{
         const categroy = new Category(req.body);
@@ -12,7 +13,7 @@ router.post('/cartegory', async  (req,res)=>{
         res.json({message: err.message})
     }
 });
-
+// show all categories
 router.get('/cartegory',async (req,res)=> {
     try{
         const {page = 1, limit=10} = req.query
@@ -22,7 +23,7 @@ router.get('/cartegory',async (req,res)=> {
         res.json({message: err.message})
     }
     });
-
+// show category by ID
 router.get('/cartegory/:id', async(req,res)=>{
     try{
         const _id = req.params.id
@@ -34,7 +35,7 @@ router.get('/cartegory/:id', async(req,res)=>{
  }
  
  });
-
+// updata the category by id 
  router.put('/cartegory/:id',async (req,res)=>{
     try{
         const _id = req.params.id
@@ -44,7 +45,7 @@ router.get('/cartegory/:id', async(req,res)=>{
         res.json({message: err.message})
     }
     });
-
+// delete the category by id
    router.delete('/cartegory/:id',async (req,res)=>{
     try{ const _id = req.params.id;
          const deletecategroy = await Category.findByIdAndDelete(_id);
@@ -64,20 +65,6 @@ router.get('/cartegory/:id', async(req,res)=>{
   // product-master
 
 const product = require('../model/productschema');
-
-// show all data in two table
-
-router.get('/productandcategory',async (req,res)=>{ 
-    try{
-        const productsall = new product(req.body)
-        console.log(productsall)
-        const productallsave = await productsall.save();
-        console.log(productallsave)
-        res.json(productallsave);
-    }catch(err){
-        res.json({message: err.message})
-    }
-    })
 
   //    post data
  router.post('/product',async (req,res)=>{ 
@@ -103,10 +90,11 @@ router.get('/product', async (req,res)=> {
     }
     });
 
- router.get('/product/:id',async(req,res)=>{
+ router.get('/productlist',async(req,res)=>{
     try{
-      const _id = req.params.id;  
-     const products = await product.findById(_id).populate('category');
+    //   const _id = req.params.id; 
+    const {page = 1,limit=10}= req.query; 
+     const products = await product.find().populate('category').limit(limit*1).skip((page-1)*limit);
      res.json(products);
  }catch(err){
      res.json({message: err.message})
