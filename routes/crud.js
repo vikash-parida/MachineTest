@@ -70,9 +70,7 @@ const product = require('../model/productschema');
  router.post('/product',async (req,res)=>{ 
     try{
         const products = new product(req.body)
-        console.log(products)
         const productsave = await products.save();
-        console.log(productsave)
         res.json(productsave);
     }catch(err){
         res.json({message: err.message})
